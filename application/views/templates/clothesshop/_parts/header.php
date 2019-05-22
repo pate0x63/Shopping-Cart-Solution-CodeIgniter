@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html lang="<?= MY_LANGUAGE_ABBR ?>">
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" /> 
+        <meta name="description" content="<?= $description ?>" />
+        <meta name="keywords" content="<?= $keywords ?>" />
+        <meta property="og:title" content="<?= $title ?>" />
+        <meta property="og:description" content="<?= $description ?>" />
+        <meta property="og:url" content="<?= LANG_URL ?>" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="<?= base_url('assets/img/site-overview.png') ?>" />
         <title><?= $title ?></title>
-        <meta name="description" content="<?= $description ?>">
-        <meta name="keywords" content="<?= $keywords ?>">
-        <link rel="stylesheet" href="<?= base_url('assets/css/font-awesome.min.css') ?>">
-        <link href="<?= base_url('templatecss/bootstrap.min.css') ?>" rel="stylesheet">
-        <link href="<?= base_url('assets/css/bootstrap-datepicker.min.css') ?>" rel="stylesheet">
-        <link href="<?= base_url('templatecss/custom.css') ?>" rel="stylesheet">
-        <link href="<?= base_url('cssloader/theme.css') ?>" rel="stylesheet">
+        <link rel="stylesheet" href="<?= base_url('assets/css/font-awesome.min.css') ?>" />
+        <link href="<?= base_url('templatecss/bootstrap.min.css') ?>" rel="stylesheet" />
+        <link href="<?= base_url('assets/css/bootstrap-datepicker.min.css') ?>" rel="stylesheet" />
+        <link href="<?= base_url('templatecss/custom.css') ?>" rel="stylesheet" />
+        <link href="<?= base_url('cssloader/theme.css') ?>" rel="stylesheet" />
         <script src="<?= base_url('assets/js/jquery.min.js') ?>"></script>
         <script src="<?= base_url('loadlanguage/all.js') ?>"></script>
         <?php if ($cookieLaw != false) { ?>
@@ -29,6 +34,25 @@
         <div id="wrapper">
             <div id="content">
                 <header>
+                    <?php if ($multiVendor == 1) { ?>
+                        <div id="top-user-panel">
+                            <div class="container">
+                                <a href="<?= LANG_URL . '/vendor/register' ?>" class="btn btn-default"><?= lang('register_me') ?></a>
+                                <form class="form-inline" method="POST" action="<?= LANG_URL . '/vendor/login' ?>">
+                                    <div class="form-group">
+                                        <input type="email" name="u_email" class="form-control" placeholder="<?= lang('email') ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" name="u_password" class="form-control" placeholder="<?= lang('password') ?>">
+                                    </div>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" name="remember_me"><?= lang('remember_me') ?></label>
+                                    </div>
+                                    <button type="submit" name="login" class="btn btn-default"><?= lang('u_login') ?></button>
+                                </form> 
+                            </div>
+                        </div>
+                    <?php } ?>
                     <div class="languages-bar">
                         <div class="container">
                             <?php

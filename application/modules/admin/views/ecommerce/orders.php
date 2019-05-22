@@ -48,26 +48,32 @@ if (!isset($_GET['settings'])) {
                         }
                         ?>
                         <tr>
-                            <td id="order_id-id-<?= $tr['order_id'] ?>">
+                            <td class="relative" id="order_id-id-<?= $tr['order_id'] ?>">
                                 # <?= $tr['order_id'] ?>
                                 <?php if ($tr['viewed'] == 0) { ?>
                                     <div id="new-order-alert-<?= $tr['id'] ?>">
                                         <img src="<?= base_url('assets/imgs/new-blinking.gif') ?>" style="width:100px;" alt="blinking">
                                     </div>
                                 <?php } ?>
+                                <div class="confirm-result">
+                                    <?php if ($tr['confirmed'] == '1') { ?>
+                                        <span class="label label-success">Confirmed by email</span>
+                                    <?php } else { ?> 
+                                        <span class="label label-danger">Not Confirmed</span> 
+                                    <?php } ?>
+                                </div>
                             </td>
-                            <td><?= date('d.M.Y / H:m:s', $tr['date']); ?></td>
+                            <td><?= date('d.M.Y / H:i:s', $tr['date']); ?></td>
                             <td>
                                 <i class="fa fa-user" aria-hidden="true"></i> 
                                 <?= $tr['first_name'] . ' ' . $tr['last_name'] ?>
                             </td>
                             <td><i class="fa fa-phone" aria-hidden="true"></i> <?= $tr['phone'] ?></td>
                             <td class="<?= $class ?> text-center" data-action-id="<?= $tr['id'] ?>">
-                                <?php ?>
                                 <div class="status" style="padding:5px; font-size:16px;">
                                     -- <b><?= $type ?></b> --
                                 </div>
-                                <div style="margin-bottom:4px;"><a href="javascript:void(0);" onclick="changeOrdersOrderStatus(<?= $tr['id'] ?>, 1)" class="btn btn-success btn-xs">Processed</a></div>
+                                <div style="margin-bottom:4px;"><a href="javascript:void(0);" onclick="changeOrdersOrderStatus(<?= $tr['id'] ?>, 1, '<?= htmlentities($tr['products']) ?>', '<?= $tr['email'] ?>')" class="btn btn-success btn-xs">Processed</a></div>
                                 <div style="margin-bottom:4px;"><a href="javascript:void(0);" onclick="changeOrdersOrderStatus(<?= $tr['id'] ?>, 0)" class="btn btn-danger btn-xs">No processed</a></div>
                                 <div style="margin-bottom:4px;"><a href="javascript:void(0);" onclick="changeOrdersOrderStatus(<?= $tr['id'] ?>, 2)" class="btn btn-warning btn-xs">Rejected</a></div>
                             </td>
@@ -104,14 +110,22 @@ if (!isset($_GET['settings'])) {
                                             <tr>
                                                 <td><b>Come from site</b></td>
                                                 <td>
-                                                    <a target="_blank" href="<?= $tr['referrer'] ?>" class="orders-referral">
-                                                        <?= $tr['referrer'] ?>
-                                                    </a>
+                                                    <?php if ($tr['referrer'] != 'Direct') { ?>
+                                                        <a target="_blank" href="<?= $tr['referrer'] ?>" class="orders-referral">
+                                                            <?= $tr['referrer'] ?>
+                                                        </a>
+                                                    <?php } else { ?>
+                                                        Direct traffic or referrer is not visible                       
+                                                    <?php } ?>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td><b>Payment Type</b></td>
                                                 <td><?= $tr['payment_type'] ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>Discount</b></td>
+                                                <td><?= $tr['discount_type'] == 'float' ? '-' . $tr['discount_amount'] : '-' . $tr['discount_amount'] . '%' ?></td>
                                             </tr>
                                             <?php if ($tr['payment_type'] == 'PayPal') { ?>
                                                 <tr>
@@ -126,19 +140,28 @@ if (!isset($_GET['settings'])) {
                                                 <td colspan="2">
                                                     <?php
                                                     $arr_products = unserialize($tr['products']);
-                                                    foreach ($arr_products as $product_id => $product_quantity) {
-                                                        $productInfo = modules::run('admin/ecommerce/products/getProductInfo', $product_id);
+                                                    foreach ($arr_products as $product) {
+                                                        $total_amount = 0;
+                                                        $total_amount += str_replace(' ', '', str_replace(',', '.',$product['product_info']['price']));
                                                         ?>
                                                         <div style="word-break: break-all;">
                                                             <div>
-                                                                <img src="<?= base_url('attachments/shop_images/' . $productInfo['image']) ?>" alt="Product" style="width:100px; margin-right:10px;" class="img-responsive">
+                                                                <img src="<?= base_url('attachments/shop_images/' . $product['product_info']['image']) ?>" alt="Product" style="width:100px; margin-right:10px;" class="img-responsive">
                                                             </div>
-                                                            <a data-toggle="tooltip" data-placement="top" title="Click to preview" target="_blank" href="<?= base_url($productInfo['url']) ?>">
-                                                                <?= base_url($productInfo['url']) ?>
-                                                                <div style=" background-color: #f1f1f1; border-radius: 2px; padding: 2px 5px;"><b>Quantity:</b> <?= $product_quantity ?></div>
+                                                            <a data-toggle="tooltip" data-placement="top" title="Click to preview" target="_blank" href="<?= base_url($product['product_info']['url']) ?>">
+                                                                <?= base_url($product['product_info']['url']) ?>
+                                                                <div style=" background-color: #f1f1f1; border-radius: 2px; padding: 2px 5px;">
+                                                                    <b>Quantity:</b> <?= $product['product_quantity'] ?> / 
+                                                                    <b>Price: <?= $product['product_info']['price'].' '.$this->config->item('currency') ?></b>
+                                                                </div>
                                                             </a>
+                                                            <div class="">
+                                                                <b>Vendor:</b>
+                                                                <a href=""><?= $product['product_info']['vendor_name'] ?></a>
+                                                            </div>
                                                             <div class="clearfix"></div>
                                                         </div>
+                                                        <div style="padding-top:10px; font-size:16px;">Total amount of products: <?= $total_amount.' '.$this->config->item('currency') ?></div>
                                                         <hr>
                                                     <?php }
                                                     ?>
@@ -186,7 +209,7 @@ if (isset($_GET['settings'])) {
     <hr>
     <h3>Paypal Account Settings</h3>
     <div class="row">
-        <div class="col-sm-6 col-md-4">
+        <div class="col-sm-6">
             <div class="panel panel-default">
                 <div class="panel-heading">Paypal sandbox mode (use for paypal account tests)</div>
                 <div class="panel-body">
@@ -203,7 +226,7 @@ if (isset($_GET['settings'])) {
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-md-4">
+        <div class="col-sm-6">
             <div class="panel panel-default">
                 <div class="panel-heading">Paypal business email</div>
                 <div class="panel-body">
@@ -222,27 +245,7 @@ if (isset($_GET['settings'])) {
                     </form>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-6 col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">Paypal currency (make sure is supported from paypal!)</div>
-                <div class="panel-body">
-                    <?php if ($this->session->flashdata('paypal_currency')) { ?>
-                        <div class="alert alert-info"><?= $this->session->flashdata('paypal_currency') ?></div>
-                    <?php } ?>
-                    <form method="POST" action="">
-                        <div class="input-group">
-                            <input class="form-control" name="paypal_currency" value="<?= $paypal_currency ?>" type="text">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" value="" type="submit">
-                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                </button>
-                            </span>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+        </div> 
     </div>
     <hr>
     <h3>Bank Account Settings</h3>

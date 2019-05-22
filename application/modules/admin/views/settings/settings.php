@@ -79,6 +79,7 @@
         </div>
         <script>
             CKEDITOR.replace('contacts-page');
+            CKEDITOR.config.entities = false;
         </script>
     </div>
     <div class="col-sm-6 col-md-4">
@@ -272,6 +273,23 @@
     </div>
     <div class="col-sm-6 col-md-4">
         <div class="panel panel-success col-h">
+            <div class="panel-heading">Multi-Vendor Support</div>
+            <div class="panel-body">
+                <?php if ($this->session->flashdata('multiVendor')) { ?>
+                    <div class="alert alert-info"><?= $this->session->flashdata('multiVendor') ?></div>
+                <?php } ?>
+                <form method="POST" action="">
+                    <input type="hidden" name="multiVendor" value="<?= $multiVendor ?>">
+                    <input <?= $multiVendor == 1 ? 'checked' : '' ?> data-toggle="toggle" data-for-field="multiVendor" class="toggle-changer" type="checkbox">
+                    <button class="btn btn-default" value="" type="submit">
+                        Save
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-4">
+        <div class="panel panel-success col-h">
             <div class="panel-heading">Show in list out of stock products</div>
             <div class="panel-body">
                 <?php if ($this->session->flashdata('outOfStock')) { ?>
@@ -350,20 +368,20 @@
                     <label>Enable:</label>
                     <input <?= isset($cookieLawInfo['cookieInfo']['visibility']) && $cookieLawInfo['cookieInfo']['visibility'] == 1 ? 'checked' : '' ?> data-toggle="toggle" data-for-field="visibility" class="toggle-changer" type="checkbox">
                     <hr>
-                    <?php foreach ($languages->result() as $language) { ?>
+                    <?php foreach ($languages as $language) { ?>
                         <input type="hidden" name="translations[]" value="<?= $language->abbr ?>">
-                    <?php } foreach ($languages->result() as $language) { ?>
+                    <?php } foreach ($languages as $language) { ?>
                         <div class="form-group">
                             <label for="message-cookie-law">Message (<?= $language->name ?><img src="<?= base_url('attachments/lang_flags/' . $language->flag) ?>" alt="">)</label>
                             <input type="text" name="message[]" value="<?= isset($cookieLawInfo['cookieTranslate'][$language->abbr]['message']) ? $cookieLawInfo['cookieTranslate'][$language->abbr]['message'] : '' ?>" class="form-control" id="message-cookie-law">
                         </div>
-                    <?php } foreach ($languages->result() as $language) {
+                    <?php } foreach ($languages as $language) {
                         ?>
                         <div class="form-group">
                             <label for="btn-cookie-law">Button Text (<?= $language->name ?><img src="<?= base_url('attachments/lang_flags/' . $language->flag) ?>" alt="">)</label>
                             <input type="text" name="button_text[]" value="<?= isset($cookieLawInfo['cookieTranslate'][$language->abbr]['button_text']) ? $cookieLawInfo['cookieTranslate'][$language->abbr]['button_text'] : '' ?>" class="form-control" id="btn-cookie-law">
                         </div>
-                    <?php } foreach ($languages->result() as $language) { ?>
+                    <?php } foreach ($languages as $language) { ?>
                         <div class="form-group">
                             <label for="learn_more">Learn More (<?= $language->name ?><img src="<?= base_url('attachments/lang_flags/' . $language->flag) ?>" alt="">):</label>
                             <input type="text" name="learn_more[]" value="<?= isset($cookieLawInfo['cookieTranslate'][$language->abbr]['learn_more']) ? $cookieLawInfo['cookieTranslate'][$language->abbr]['learn_more'] : '' ?>" class="form-control" id="learn_more">
@@ -391,6 +409,23 @@
                         </div>
                     </div>
                     <button class="btn btn-default" name="setCookieLaw" value="" type="submit">
+                        Save
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-4">
+        <div class="panel panel-success col-h">
+            <div class="panel-heading">Virtual products</div>
+            <div class="panel-body">
+                <?php if ($this->session->flashdata('virtualProducts')) { ?>
+                    <div class="alert alert-info"><?= $this->session->flashdata('virtualProducts') ?></div>
+                <?php } ?>
+                <form method="POST" action="">
+                    <input type="hidden" name="virtualProducts" value="<?= $virtualProducts ?>">
+                    <input <?= $virtualProducts == 1 ? 'checked' : '' ?> data-toggle="toggle" data-for-field="virtualProducts" class="toggle-changer" type="checkbox">
+                    <button class="btn btn-default" value="" type="submit">
                         Save
                     </button>
                 </form>

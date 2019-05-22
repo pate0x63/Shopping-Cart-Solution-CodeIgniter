@@ -11,6 +11,12 @@ if (!defined('BASEPATH')) {
 class TextualPages extends ADMIN_Controller
 {
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->model('Textual_pages_model');
+    }
+
     public function pageEdit($page = null)
     {
         $this->login_check();
@@ -22,17 +28,12 @@ class TextualPages extends ADMIN_Controller
         $head['title'] = 'Administration - Pages Manage';
         $head['description'] = '!';
         $head['keywords'] = '';
-        $data['page'] = $this->AdminModel->getOnePageForEdit($page);
+        $data['page'] = $this->Textual_pages_model->getOnePageForEdit($page);
         if (empty($data['page'])) {
             redirect('admin/pages');
         }
         if (isset($_POST['updatePage'])) {
-            $translations = array(
-                'abbr' => $_POST['translations'],
-                'name' => $_POST['name'],
-                'description' => $_POST['description']
-            );
-            $this->AdminModel->setEditPageTranslations($translations, $_POST['pageId']);
+            $this->Textual_pages_model->setEditPageTranslations($_POST);
             $this->saveHistory('Page ' . $_POST['pageId'] . ' updated!');
             redirect('admin/pageedit/' . $page);
         }
@@ -46,7 +47,7 @@ class TextualPages extends ADMIN_Controller
     public function changePageStatus()
     {
         $this->login_check();
-        $result = $this->AdminModel->changePageStatus($_POST['id'], $_POST['status']);
+        $result = $this->Textual_pages_model->changePageStatus($_POST['id'], $_POST['status']);
         if ($result == true) {
             echo 1;
         } else {

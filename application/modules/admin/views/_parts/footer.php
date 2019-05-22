@@ -3,7 +3,7 @@
 </div>
 </div>
 <?php if ($this->session->userdata('logged_in')) { ?>
-    <footer>Powered by <a href="http://eccfze.ae">ECCFZE</a></footer>
+<footer>Powered by <a href="http://gmmbsolutions.com/">GMMB SOLUTIONS LTD.</a> / Developer <a href="https://github.com/kirilkirkov">Kiril Kirkov</a></footer>
 <?php } ?>
 </div>
 <!-- Modal Calculator -->
@@ -98,7 +98,6 @@
         editShopCategorie: '<?= base_url('admin/editshopcategorie') ?>',
         changeTextualPageStatus: '<?= base_url('admin/changePageStatus') ?>',
         removeSecondaryImage: '<?= base_url('admin/removeSecondaryImage') ?>',
-        convertCurrency: '<?= base_url('admin/convertCurrency') ?>',
         productstatusChange: '<?= base_url('admin/productstatusChange') ?>',
         productsOrderBy: '<?= base_url('admin/products?orderby=') ?>',
         productStatusChange: '<?= base_url('admin/productStatusChange') ?>',

@@ -18,14 +18,15 @@ class ShoppingCart
     public function __construct()
     {
         $this->CI = & get_instance();
-        $this->CI->load->model('admin/AdminModel');
+        $this->CI->load->model('admin/Home_admin_model');
     }
 
     public function manageShoppingCart()
     {
         if ($_POST['action'] == 'add') {
-            if (!isset($_SESSION['shopping_cart']))
+            if (!isset($_SESSION['shopping_cart'])) {
                 $_SESSION['shopping_cart'] = array();
+            }
             @$_SESSION['shopping_cart'][] = (int) $_POST['article_id'];
         }
         if ($_POST['action'] == 'remove') {
@@ -60,10 +61,10 @@ class ShoppingCart
     {
         if ((!isset($_SESSION['shopping_cart']) || empty($_SESSION['shopping_cart'])) && get_cookie('shopping_cart') != NULL) {
             $_SESSION['shopping_cart'] = unserialize(get_cookie('shopping_cart'));
-        } elseif (!isset($_SESSION['shopping_cart']) || empty($_SESSION['shopping_cart'])) {
+        } elseif (!isset($_SESSION['shopping_cart']) || !is_array($_SESSION['shopping_cart'])) {
             return 0;
         }
-        $result['array'] = $this->CI->Publicmodel->getShopItems(array_unique($_SESSION['shopping_cart']));
+        $result['array'] = $this->CI->Public_model->getShopItems(array_unique($_SESSION['shopping_cart']));
         if (empty($result['array'])) {
             unset($_SESSION['shopping_cart']);
             @delete_cookie('shopping_cart');
@@ -75,6 +76,7 @@ class ShoppingCart
 
         foreach ($result['array'] as &$article) {
             $article['num_added'] = $count_articles[$article['id']];
+            $article['price'] = $article['price'] == '' ? 0 : $article['price'];
             $article['sum_price'] = $article['price'] * $count_articles[$article['id']];
             $finalSum = $finalSum + $article['sum_price'];
             $article['sum_price'] = number_format($article['sum_price'], 2);

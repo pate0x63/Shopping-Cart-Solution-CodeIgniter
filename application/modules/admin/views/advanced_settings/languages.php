@@ -31,38 +31,41 @@
     if (!isset($writable)) {
         ?>
         <a href="javascript:void(0);" data-toggle="modal" data-target="#addLanguage" class="btn btn-primary btn-xs pull-right" style="margin-bottom:10px;"><b>+</b> Add new language</a>
+        <div class="clearfix"></div>
         <?php
     }
-    if ($languages->result()) {
+    if ($languages) {
         ?>
-        <table class="table table-striped custab">
-            <thead>
-                <tr>
-                    <th>#ID</th>
-                    <th>Image</th>
-                    <th>Abbr</th>
-                    <th>Name</th>
-                    <th>Currency</th>
-                    <th class="text-center">Action</th>
-                </tr>
-            </thead>
-            <?php foreach ($languages->result() as $language) { ?>
-                <tr>
-                    <td><?= $language->id ?></td>
-                    <td><img src="<?= base_url('attachments/lang_flags/' . $language->flag) ?>" alt="No country flag" style="width:16px; height:11px;"></td>
-                    <td><?= strtoupper($language->abbr) ?></td>
-                    <td><?= ucfirst($language->name) ?></td>
-                    <td><?= $language->currency ?></td>
-                    <td class="text-center">
-                        <?php if (MY_DEFAULT_LANGUAGE_ABBR != $language->abbr) { ?>
-                            <a href="<?= base_url('admin/languages/?delete=' . $language->id) ?>" class="btn btn-danger btn-xs confirm-delete"><span class="glyphicon glyphicon-remove"></span> Delete</a>
-                        <?php } else { ?>
-                            Its default
-                        <?php } ?>
-                        <a href="<?= base_url('admin/languages/?editLang=' . $language->name) ?>" class="btn btn-info btn-xs"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
-                </tr>
-            <?php } ?>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-striped custab">
+                <thead>
+                    <tr>
+                        <th>#ID</th>
+                        <th>Image</th>
+                        <th>Abbr</th>
+                        <th>Name</th>
+                        <th>Currency</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <?php foreach ($languages as $language) { ?>
+                    <tr>
+                        <td><?= $language->id ?></td>
+                        <td><img src="<?= base_url('attachments/lang_flags/' . $language->flag) ?>" alt="No country flag" style="width:16px; height:11px;"></td>
+                        <td><?= strtoupper($language->abbr) ?></td>
+                        <td><?= ucfirst($language->name) ?></td>
+                        <td><?= $language->currency ?></td>
+                        <td class="text-center">
+                            <?php if (MY_DEFAULT_LANGUAGE_ABBR != $language->abbr) { ?>
+                                <a href="<?= base_url('admin/languages/?delete=' . $language->id) ?>" class="btn btn-danger btn-xs confirm-delete"><span class="glyphicon glyphicon-remove"></span> Delete</a>
+                            <?php } else { ?>
+                                Its default
+                            <?php } ?>
+                            <a href="<?= base_url('admin/languages/?editLang=' . $language->name) ?>" class="btn btn-info btn-xs"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+                    </tr>
+                <?php } ?>
+            </table>
+        </div>
     <?php } else { ?>
         <div class="clearfix"></div><hr>
         <div class="alert alert-info">No languages found!</div>

@@ -11,11 +11,17 @@ if (!defined('BASEPATH')) {
 class Languages extends ADMIN_Controller
 {
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->model('Languages_model');
+    }
+
     public function index()
     {
         $this->login_check();
         if (isset($_GET['delete'])) {
-            $result = $this->AdminModel->deleteLanguage($_GET['delete']);
+            $result = $this->Languages_model->deleteLanguage($_GET['delete']);
             if ($result == true) {
                 $this->saveHistory('Delete language id - ' . $_GET['delete']);
                 $this->session->set_flashdata('result_delete', 'Language is deleted!');
@@ -25,7 +31,7 @@ class Languages extends ADMIN_Controller
             redirect('admin/languages');
         }
         if (isset($_GET['editLang'])) {
-            $num = $this->AdminModel->countLangs($_GET['editLang']);
+            $num = $this->Languages_model->countLangs($_GET['editLang']);
             if ($num == 0) {
                 redirect('admin/languages');
             }
@@ -47,10 +53,10 @@ class Languages extends ADMIN_Controller
             $data['arrJsFiles'] = $langFiles[1];
         }
         $head['keywords'] = '';
-        $data['languages'] = $this->AdminModel->getLanguages();
+        $data['languages'] = $this->Languages_model->getLanguages();
 
         if (isset($_POST['name']) && isset($_POST['abbr'])) {
-            $dublicates = $this->AdminModel->countLangs($_POST['name'], $_POST['abbr']);
+            $dublicates = $this->Languages_model->countLangs($_POST['name'], $_POST['abbr']);
             if ($dublicates == 0) {
                 $config['upload_path'] = '.' . DIRECTORY_SEPARATOR . 'attachments' . DIRECTORY_SEPARATOR . 'lang_flags' . DIRECTORY_SEPARATOR . '';
                 $config['allowed_types'] = 'gif|jpg|png';
@@ -64,14 +70,10 @@ class Languages extends ADMIN_Controller
                         $_POST['flag'] = $img['file_name'];
                     }
                 }
-                $result = $this->AdminModel->setLanguage($_POST);
-                if ($result === true) {
-                    $this->createLangFolders();
-                    $this->session->set_flashdata('result_add', 'Language is added!');
-                    $this->saveHistory('Create language - ' . $_POST['abbr']);
-                } else {
-                    $this->session->set_flashdata('result_add', 'Problem with language add!');
-                }
+                $this->Languages_model->setLanguage($_POST);
+                $this->createLangFolders();
+                $this->session->set_flashdata('result_add', 'Language is added!');
+                $this->saveHistory('Create language - ' . $_POST['abbr']);
             } else
                 $this->session->set_flashdata('result_add', 'This language exsists!');
             redirect('admin/languages');
@@ -93,7 +95,9 @@ class Languages extends ADMIN_Controller
                 savefile($prevFile, $phpFileInclude);
                 $phpFileInclude = "<?php \n";
             }
-            $phpFileInclude .= '$lang[\'' . htmlentities($_POST['php_keys'][$i]) . '\'] = \'' . htmlentities($_POST['php_values'][$i]) . '\';' . "\n";
+            $php_value = str_replace("'", '&#39;', $_POST['php_values'][$i]);
+			$php_value = str_replace('"', '&#34;', $php_value);
+            $phpFileInclude .= '$lang[\'' . htmlentities($_POST['php_keys'][$i]) . '\'] = \'' . $php_value . '\';' . "\n";
             $prevFile = $phpFile;
             $i++;
         }

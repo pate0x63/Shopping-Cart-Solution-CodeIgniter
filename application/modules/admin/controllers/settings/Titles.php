@@ -11,6 +11,12 @@ if (!defined('BASEPATH')) {
 class Titles extends ADMIN_Controller
 {
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->model(array('Titles_model', 'Languages_model'));
+    }
+
     public function index()
     {
         $this->login_check();
@@ -21,21 +27,15 @@ class Titles extends ADMIN_Controller
         $head['keywords'] = '';
 
         if (isset($_POST['save'])) {
-            $translations = array(
-                'pages' => $_POST['pages'],
-                'abbr' => $_POST['translations'],
-                'title' => $_POST['title'],
-                'description' => $_POST['description']
-            );
-            $this->AdminModel->setSeoPageTranslations($translations);
+            $this->Titles_model->setSeoPageTranslations($_POST);
             $this->saveHistory('Changed Titles / Descriptions');
             $this->session->set_flashdata('result_publish', 'Saved successful!');
             redirect('admin/titles');
         }
 
-        $data['seo_trans'] = $this->AdminModel->getSeoTranslations();
-        $data['languages'] = $this->AdminModel->getLanguages();
-        $data['seo_pages'] = $this->AdminModel->getSeoPages();
+        $data['seo_trans'] = $this->Titles_model->getSeoTranslations();
+        $data['languages'] = $this->Languages_model->getLanguages();
+        $data['seo_pages'] = $this->Titles_model->getSeoPages();
         $this->load->view('_parts/header', $head);
         $this->load->view('settings/titles', $data);
         $this->load->view('_parts/footer');

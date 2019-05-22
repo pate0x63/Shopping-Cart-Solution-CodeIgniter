@@ -13,8 +13,7 @@
         <div class="alert alert-success"><?= $this->session->flashdata('result_publish') ?></div>
         <hr>
         <?php
-    }
-    $langs = $languages->result();
+    } 
     ?>
     <h1><img src="<?= base_url('assets/imgs/products-img.png') ?>" class="header-img" style="margin-top:-2px;"> Products</h1>
     <hr>
@@ -65,7 +64,7 @@
             </div>
             <hr>
             <?php
-            if ($products->result()) {
+            if ($products) {
                 ?>
                 <div class="table-responsive">
                     <table class="table table-bordered">
@@ -75,13 +74,14 @@
                                 <th>Title</th>
                                 <th>Price</th>
                                 <th>Quantity</th>
+                                <th>Vendor</th>
                                 <th>Position</th>
                                 <th class="text-right">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            foreach ($products->result() as $row) {
+                            foreach ($products as $row) {
                                 $u_path = 'attachments/shop_images/';
                                 if ($row->image != null && file_exists($u_path . $row->image)) {
                                     $image = base_url($u_path . $row->image);
@@ -116,6 +116,7 @@
                                             <?= $row->quantity ?>
                                         </span>
                                     </td>
+                                    <td><?= $row->vendor_id > 0 ? '<a href="?show_vendor=' . $row->vendor_id . '">' . $row->vendor_name . '</a>' : 'No vendor' ?></td>
                                     <td><?= $row->position ?></td>
                                     <td>
                                         <div class="pull-right">

@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   | a PHP script and you can easily do that on your own.
   |
  */
-$config['base_url'] = 'http://shop.dev/';
+$config['base_url'] = 'http://shop.localhost/';
 
 /*
   |--------------------------------------------------------------------------
@@ -69,6 +69,13 @@ $config['url_suffix'] = '';
 
 /*
   |--------------------------------------------------------------------------
+  | Send confirm link to email
+  |--------------------------------------------------------------------------
+ */
+$config['send_confirm_link'] = TRUE;
+
+/*
+  |--------------------------------------------------------------------------
   | Admin history
   |--------------------------------------------------------------------------
   |
@@ -88,10 +95,10 @@ $config['admin_history'] = false;
   | hepler for help.. :)
   |
  */
-$config['language'] = 'bulgarian';
-$config['language_abbr'] = 'bg';
-$config['currency'] = 'лв';
-$config['currencyKey'] = 'BGN';
+$config['language'] = 'english';
+$config['language_abbr'] = 'en';
+$config['currency'] = '€';
+$config['currencyKey'] = 'EUR';
 
 /*
   |--------------------------------------------------------------------------
@@ -250,7 +257,7 @@ $config['directory_trigger'] = 'd';
   | your log files will fill up very fast.
   |
  */
-$config['log_threshold'] = 0;
+$config['log_threshold'] = 1;
 
 /*
   |--------------------------------------------------------------------------

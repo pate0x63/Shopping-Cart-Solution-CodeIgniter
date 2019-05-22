@@ -12,7 +12,7 @@
         ?>
         <form action="" method="POST">
             <?php
-            foreach ($languages->result() as $language) {
+            foreach ($languages as $language) {
                 ?>
                 <input type="hidden" name="translations[]" value="<?= $language->abbr ?>">
                 <?php
@@ -26,19 +26,19 @@
                 ?>
                 <h4 class="bg-info"><?= $page['name'] ?></h4>
                 <?php
-                foreach ($languages->result() as $language) {
+                foreach ($languages as $language) {
                     ?>
                     <div class="form-group"> 
                         <label>Title (<?= $language->name ?><img src="<?= base_url('attachments/lang_flags/' . $language->flag) ?>" alt="">)</label>
-                        <input type="text" name="title[]" value="<?= @$seo_trans['page_' . $page['name']][$language->abbr]['title'] ?>" class="form-control">
+                        <input type="text" name="title[]" value="<?= @$seo_trans[$page['name']][$language->abbr]['title'] ?>" class="form-control">
                     </div>
                     <?php
                 }
-                foreach ($languages->result() as $language) {
+                foreach ($languages as $language) {
                     ?>
                     <div class="form-group"> 
                         <label>Description (<?= $language->name ?><img src="<?= base_url('attachments/lang_flags/' . $language->flag) ?>" alt="">)</label>
-                        <input type="text" name="description[]" value="<?= @$seo_trans['page_' . $page['name']][$language->abbr]['description'] ?>" class="form-control">
+                        <input type="text" name="description[]" value="<?= @$seo_trans[$page['name']][$language->abbr]['description'] ?>" class="form-control">
                     </div>
                     <?php
                 }
